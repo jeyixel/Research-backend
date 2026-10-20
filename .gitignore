@@ -40,3 +40,4 @@
 # DB files that change at every run
 trend-intelligence/data/trends.db
 trend-intelligence/data/*.db
+data-collector/data/

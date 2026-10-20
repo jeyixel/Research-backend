@@ -18,7 +18,7 @@ cp .env.example .env               # then paste your key into .env as YT_API_KEY
 | Step | Command | Quota | Output |
 |---|---|---|---|
 | 1. Discover candidates | `python yt_collector.py discover` | ~2,500 units (25 queries x 100) | `data/candidates.csv` |
-| 2. Human review | open the CSV, fix `category`, put `y` in `approve`; add your own channels to `channels.csv` | 0 | approved list |
+| 2. Human review | open the CSV and fix `category`; put `y` in `approve` for channels to collect. To approve every row at once, run `python approveall.py` from this folder. Add your own channels to `channels.csv` if needed. | 0 | approved list |
 | 3. Collect metadata | `python yt_collector.py collect --channels data/candidates.csv` then `... --channels channels.csv` | ~9 units per channel (200 videos) | `data/yt.db` |
 | 4. Thumbnails | `python yt_collector.py thumbs` | 0 (not API) | `data/thumbnails/<video_id>.jpg` (640x360) |
 | 5. Check coverage | `python yt_collector.py stats` | 0 | summary in terminal |

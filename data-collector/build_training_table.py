@@ -131,5 +131,6 @@ def main():
           "into Module C; `subscribers` is a snapshot at collection time, so treat it as approximate for E.")
 
 
+# Run the table-building process when this file is executed directly.
 if __name__ == "__main__":
     main()
