@@ -27,6 +27,7 @@ import numpy as np
 import pandas as pd
 
 
+# Calculates past-video features and relative-performance targets for one channel.
 def per_channel_features(g, k, min_neighbors, min_prev):
     g = g.sort_values("published_at").reset_index(drop=True)
     n = len(g)
@@ -64,6 +65,7 @@ def per_channel_features(g, k, min_neighbors, min_prev):
     return g
 
 
+# Loads the database, filters videos, builds the training table, and saves the CSV.
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default="data/yt.db")
