@@ -1,0 +1,42 @@
+# Secrets and local configuration
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+**/*.pem
+**/*.key
+**/*_secret.json
+**/secrets.*
+
+# Python environments, bytecode, and tool caches
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.tox/
+**/.nox/
+**/.cache/
+
+# Generated databases, logs, and build output
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.log
+**/.coverage
+**/htmlcov/
+**/build/
+**/dist/
+
+# Editor and operating system files
+**/.idea/
+**/.vscode/
+**/.DS_Store
+**/Thumbs.db
+**/Desktop.ini
+
+# DB files that change at every run
+trend-intelligence/data/trends.db
+trend-intelligence/data/*.db
