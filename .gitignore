@@ -41,3 +41,7 @@
 trend-intelligence/data/trends.db
 trend-intelligence/data/*.db
 data-collector/data/
+
+# Module C generated research data and downloaded model weights
+creator-performance-backend/artifacts/
+creator-performance-backend/*.egg-info/
