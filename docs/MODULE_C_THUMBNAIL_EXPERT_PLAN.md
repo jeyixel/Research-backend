@@ -22,6 +22,14 @@ A creator provides a **proposed thumbnail**, **title**, and **video category** b
 5. Return **specific, appropriately cautious recommendations**, with comparable historical examples where available.
 6. Eventually, if creators supply their private YouTube Analytics/Studio data, extend the module to **actual CTR prediction relative to a creator's historical CTR**.
 
+**Product target:** The creator should receive a practical analysis of what the thumbnail communicates,
+how it compares with relevant historical examples, what they could test or improve, and a model-based
+relative-performance estimate only after the model proves reliable. Training classifiers offline is a
+research step; connecting a validated model to the upload API is a separate implementation milestone.
+Historical public views cannot establish why an individual thumbnail succeeded or supply a defensible
+"virality score." If the evidence for a numeric estimate is weak, the product should say so and still
+give useful, evidence-grounded design feedback.
+
 **Recommended research question for the public-data MVP:**
 
 > Can visual and semantic properties of thumbnails and titles help predict which videos outperform their channel's typical views, within comparable content domains?

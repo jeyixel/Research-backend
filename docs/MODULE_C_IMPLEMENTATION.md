@@ -54,3 +54,18 @@ Both API forecast fields remain `null`. Neither public relative views nor a succ
 establish actual CTR, causal design quality, or expected uplift from an edit. Fixed-horizon outcomes,
 stronger topic controls, local-language review, and consenting creator experiments remain necessary
 before stronger performance claims.
+
+## Creator goal and remaining product gap
+
+The intended product should analyze a creator's proposed thumbnail, title, and category; learn from
+historical thumbnail/title patterns and relative view outcomes; provide useful, evidence-backed advice;
+and eventually show a validated relative-performance estimate. The current upload API measures the new
+image, retrieves historical examples, and selects advice through rules. The trained classifiers are
+research artifacts and are not connected to upload scoring. A completed offline training run therefore
+does not make this a creator-facing predictive model.
+
+Before adding a score, evaluate whether visual inputs improve on the title/category baseline on held-out
+channels, check calibration and category/language behavior, and confirm performance on newer or
+prospective data. Then implement and validate versioned inference in the API. A score from this public
+dataset would estimate above-baseline relative views, not virality or CTR; statements about what caused
+success or which edit will raise views require controlled creator evidence.
