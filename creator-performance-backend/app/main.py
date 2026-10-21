@@ -4,13 +4,18 @@ from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.staticfiles import StaticFiles
 from starlette.concurrency import run_in_threadpool
 
+from app.demo import WEB_ROOT
+from app.demo import router as demo_router
 from app.modules.module_c.config import get_settings
 from app.modules.module_c.schemas import Category, Report, TitleLanguage
 from app.modules.module_c.service import ThumbnailService
 
 app = FastAPI(title="Sri Lankan Creator Assistant — Module C", version="0.1.0")
+app.mount("/static", StaticFiles(directory=WEB_ROOT), name="static")
+app.include_router(demo_router)
 
 
 @lru_cache

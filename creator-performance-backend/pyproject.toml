@@ -26,6 +26,9 @@ module-c = "app.modules.module_c.cli:main"
 [tool.setuptools.packages.find]
 include = ["app*"]
 
+[tool.setuptools.package-data]
+app = ["web/*.html", "web/*.css", "web/*.js", "web/*.svg"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 

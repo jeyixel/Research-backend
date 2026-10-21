@@ -4,6 +4,21 @@ Module C now lives in `creator-performance-backend/app/modules/module_c`. The sh
 provides `POST /api/module-c/analyze`, `GET /api/module-c/status`, and `GET /health`.
 See [the backend guide](../creator-performance-backend/README.md) for setup and exact commands.
 
+## Local demonstration update
+
+The browser studio is served at `/` by FastAPI with local HTML/CSS/JavaScript assets. It supports new
+uploads, explicit category/language metadata, measured category comparisons, suggestions with evidence,
+historical thumbnails, mobile preview, JSON download, printing, and descriptive comparisons of the last
+two live uploads in the same category. Saved public-corpus examples are served from an allowlisted
+review manifest and labeled as precomputed. `/review` and its CSV download expose the human review queue.
+The default writer is now `rules`. See [API/UI integration](MODULE_C_API_AND_UI.md) for routes and Next.js
+migration and [future work](MODULE_C_FUTURE_WORK.md) for model and validation gaps.
+
+CUDA extraction and indexing are complete: 30,223 cached images and 24,163 development references.
+The first completed study reports combined held-out AUROC 0.531910 versus title/category 0.527420,
+with paired difference interval [-0.009148, 0.017295]. This does not establish useful added visual
+prediction. Combined Brier 0.275438 is worse than the prior 0.250010; API predictions remain null.
+
 ## Implemented behavior
 
 - Safe JPEG/PNG/WebP uploads, measured luminance/contrast/saturation, optional CRAFT text-region geometry,

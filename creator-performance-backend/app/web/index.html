@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local thumbnail studio for Sri Lankan creators. Explore visual measurements, practical suggestions, and historical comparisons.">
+  <title>Frame — Thumbnail Studio</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/studio.css">
+  <script src="/static/studio.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Frame studio home"><span class="brand-icon" aria-hidden="true">f.</span>frame<span class="brand-divider"></span><span class="brand-caption">CREATOR STUDIO</span></a>
+    <nav aria-label="Main navigation"><a class="nav-active" href="#workspace">Thumbnail lab</a><a href="/review" target="_blank" rel="noopener">Review gallery ↗</a><a href="/docs" target="_blank" rel="noopener">API ↗</a></nav>
+    <span class="local-badge"><span class="dot"></span>LOCAL PREVIEW</span>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="intro-title">
+      <div><p class="eyebrow">MODULE C / THUMBNAIL EXPERT</p><h1 id="intro-title">A better first impression<br>starts with a closer look<span class="accent">.</span></h1><p class="intro-copy">See your thumbnail at mobile size. Explore the details.<br>Find relevant examples and ideas for your next edit.</p><a class="intro-link" href="#samples-heading">Explore a saved example ↓</a></div>
+      <aside class="dataset-card"><span class="dataset-symbol" aria-hidden="true">▧</span><p class="eyebrow">HISTORICAL REFERENCE LIBRARY</p><strong id="reference-count">—</strong><span>development thumbnails</span><p id="service-status" role="status">Checking the local library…</p></aside>
+    </section>
+
+    <div class="workspace" id="workspace">
+      <aside class="input-column">
+        <section class="panel upload-panel" aria-labelledby="upload-heading">
+          <div class="section-heading"><span class="step">01</span><h2 id="upload-heading">Your next thumbnail</h2></div>
+          <form id="analyze-form">
+            <label class="dropzone" id="dropzone" for="thumbnail">
+              <span id="drop-placeholder"><span class="upload-icon" aria-hidden="true">↥</span><strong>Drop your thumbnail here</strong><span>or <u>browse files</u></span><small>JPG, PNG or WebP · up to 10 MiB</small></span>
+              <img id="upload-preview" alt="Selected thumbnail" hidden>
+              <span class="replace-label" id="replace-label" hidden>Choose a different image</span>
+              <input id="thumbnail" name="thumbnail" type="file" accept="image/jpeg,image/png,image/webp" required>
+            </label>
+            <p class="file-info" id="file-info">Your upload is processed locally by this backend.</p>
+            <label class="field-label" for="title">Video title</label>
+            <textarea id="title" name="title" rows="3" maxlength="500" placeholder="What’s the story behind your thumbnail?" required></textarea>
+            <div class="field-row">
+              <div><label class="field-label" for="category">Category</label><select id="category" name="category"><option value="cooking">Cooking</option><option value="education">Education</option><option value="gaming">Gaming</option></select></div>
+              <div><label class="field-label" for="title-language">Title language</label><select id="title-language" name="title_language"><option value="unknown">Not specified</option><option value="en">English</option><option value="si">Sinhala</option><option value="ta">Tamil</option><option value="mixed">Mixed</option></select></div>
+            </div>
+            <p class="field-hint">Image–title alignment is experimental and available for explicitly English titles only.</p>
+            <button class="button button-primary" id="analyze-button" type="submit"><span id="analyze-label">Analyze thumbnail</span><span aria-hidden="true">↗</span></button>
+            <p id="request-status" class="request-status" role="status" aria-live="polite"></p>
+            <p id="form-error" class="error-message" role="alert" hidden></p>
+          </form>
+        </section>
+        <div class="privacy-note"><span aria-hidden="true">◇</span><p>No account needed. Uploads are not saved by the service. Reports stay in this tab until you download them.</p></div>
+        <div class="scope-note"><p class="eyebrow">A NOTE ON THE NUMBERS</p><p>Measurements describe your image. Category percentiles describe the reference library. Neither is a quality or virality score.</p></div>
+      </aside>
+
+      <div class="results-column" aria-busy="false" id="results-column">
+        <section class="panel empty-state" id="empty-state">
+          <div class="empty-art" aria-hidden="true"><span class="art-grid"></span><span class="art-frame"><span class="art-sun"></span><span class="art-mountain"></span><span class="art-type"></span></span><span class="art-label">A NEW PERSPECTIVE</span></div>
+          <p class="eyebrow">LOOK BEYOND THE BIG PICTURE</p><h2>A little insight.<br>A more intentional edit.</h2><p>Upload a thumbnail to explore its visual properties,<br>compare historical examples, and plan what to test.</p>
+          <div class="empty-features"><span>01 <b>Measure</b></span><span>02 <b>Compare</b></span><span>03 <b>Experiment</b></span></div>
+        </section>
+
+        <section id="report" hidden aria-labelledby="report-heading">
+          <div class="report-heading"><div><p class="eyebrow" id="report-source">LIVE ANALYSIS</p><h2 id="report-heading" tabindex="-1">Your thumbnail, closer up</h2><p id="report-context"></p></div><div class="report-actions"><button class="button button-outline" id="download-report" type="button">↓ JSON</button><button class="button button-outline" id="print-report" type="button">Print</button></div></div>
+          <div class="capability-row" id="capability-row"></div>
+          <div class="report-overview">
+            <section class="panel mobile-card"><p class="eyebrow">THE MOBILE VIEW</p><div class="video-preview"><img id="mobile-preview" width="320" height="180" alt="Full thumbnail at mobile preview size"><div class="video-caption"><span class="channel-avatar" aria-hidden="true">Y</span><div><h3 id="preview-title"></h3><p>Your channel · Pre-upload preview</p></div></div></div><p class="small-copy">View without zooming. What catches your eye first? Can someone else read the intended text?</p></section>
+            <section class="panel measurements-card"><div class="section-heading"><span class="step">02</span><h3>Visual snapshot</h3></div><p class="small-copy">Bars show category percentiles. Higher does not mean better.</p><div id="metrics"></div></section>
+          </div>
+          <section class="panel suggestions-section"><div class="section-heading"><span class="step">03</span><h3>Ideas for your next iteration</h3><span class="subtle-badge" id="suggestion-count"></span></div><p class="small-copy">Design experiments grounded in measurements. Check the evidence, then test the idea.</p><div id="suggestions"></div></section>
+          <section class="neighbors-section"><div class="section-heading"><span class="step">04</span><h3>A look at similar thumbnails</h3></div><p class="small-copy">Same-category examples ranked by visual similarity. Their historical view outcomes have many causes.</p><div class="neighbors-grid" id="neighbors"></div></section>
+          <section class="panel comparison-section" id="revision-section" hidden><div class="section-heading"><span class="step">↔</span><h3>Your last two live analyses</h3></div><p class="small-copy">A descriptive comparison of your edits. These changes do not identify a winning version.</p><div id="revision-previews" class="revision-previews"></div><div class="table-scroll"><table><caption class="sr-only">Measured changes between your last two uploads</caption><thead><tr><th>Measurement</th><th>Previous</th><th>Current</th><th>Change</th></tr></thead><tbody id="revision-metrics"></tbody></table></div></section>
+          <details class="panel evidence-section"><summary>Measurements &amp; evidence <span aria-hidden="true">+</span></summary><div class="details-content"><div id="findings"></div><h3>Additional measurements</h3><dl class="evidence-grid" id="extra-measurements"></dl><h3>Capabilities &amp; provenance</h3><dl class="evidence-grid" id="provenance"></dl></div></details>
+          <details class="panel evidence-section"><summary>Research status &amp; limitations <span aria-hidden="true">+</span></summary><div class="details-content"><p class="research-note">Performance prediction is unavailable in this version. The current research model has weak held-out results, so CTR and relative-performance predictions remain empty.</p><ul id="limitations"></ul></div></details>
+        </section>
+
+        <section class="sample-section" aria-labelledby="samples-heading"><div class="sample-heading"><div><p class="eyebrow">TAKE A QUICK LOOK</p><h2 id="samples-heading">Start with a real example</h2></div><span class="subtle-badge">SAVED CORPUS REPORTS</span></div><p class="small-copy">Previously generated public-data examples. Loading one displays its saved report without running a new analysis.</p><div class="sample-grid" id="samples"></div><p class="small-copy" id="sample-status" role="status">Loading examples…</p></section>
+      </div>
+    </div>
+    <footer><p><strong>frame.</strong> Thoughtful thumbnails. Testable ideas.</p><p>Module C · Local research prototype · <a href="/review/human_review.csv">Download review sheet</a></p></footer>
+  </main>
+  <noscript><p class="error-message">Enable JavaScript to upload thumbnails and view reports. The API is available at /docs.</p></noscript>
+</body>
+</html>

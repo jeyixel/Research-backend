@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     device: Literal["auto", "cpu", "cuda"] = "auto"
     batch_size: int = Field(default=32, ge=1, le=256)
     ocr_enabled: bool = True
-    writer: Literal["rules", "gemini"] = "gemini"
+    writer: Literal["rules", "gemini"] = "rules"
     gemini_api_key: str = Field(default="", validation_alias="GEMINI_API_KEY", repr=False)
     gemini_model: str = "gemini-3.5-flash-lite"
     writer_timeout_seconds: float = Field(default=8, gt=0, le=30)

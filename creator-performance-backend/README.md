@@ -5,6 +5,29 @@ It reports measured visual properties, category references, similar public examp
 suggestions. All reports are in English. It does **not** forecast CTR or claim that editing a thumbnail
 causes a view increase. Research predictions remain separate from the upload API.
 
+## Local thumbnail studio
+
+Run from this backend directory after installing dependencies and building the reference artifacts:
+
+```powershell
+$env:MODULE_C_DEVICE = "cuda"
+$env:MODULE_C_WRITER = "rules"
+$env:MODULE_C_OCR_ENABLED = "true"
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Open **http://127.0.0.1:8000/** for uploads, mobile previews, measured features, suggestions,
+historical comparisons, JSON export, printing, and a comparison of the last two live uploads in the
+same category. Generated thumbnails can be uploaded through the same form. No frontend build is needed.
+Saved public-corpus examples are labeled and use precomputed reports; run the `review` command to
+generate their catalog. `/review` opens all eighteen review reports. Regeneration preserves recorded
+human judgments in `human_review.csv`; judgments remain pending until a reviewer enters them.
+
+The default wording provider is `rules`; optional Gemini wording requires opting in. Both prediction
+fields remain null because the current held-out model is weak. See the [API and Next.js integration
+guide](../docs/MODULE_C_API_AND_UI.md), [demo checklist](../docs/Module%20C%20next%20steps.md), and
+[future work](../docs/MODULE_C_FUTURE_WORK.md).
+
 ## Windows setup
 
 Run from `creator-performance-backend`, using this directory's Python 3.11 environment.
@@ -122,7 +145,8 @@ For an explicitly saved local report:
 
 ## Optional Gemini wording (free-tier development)
 
-Set `GEMINI_API_KEY` in the backend's `.env`. Never commit it. Defaults are in `.env.example`:
+To opt in, set `MODULE_C_WRITER=gemini` and `GEMINI_API_KEY` in the backend's `.env`. Never commit the key.
+The following example overrides the default `rules` writer; other settings are in `.env.example`:
 
 ```dotenv
 MODULE_C_WRITER=gemini

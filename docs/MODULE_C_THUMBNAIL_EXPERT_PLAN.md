@@ -2,10 +2,15 @@
 ## Research Notes, Architecture, Training Plan, and Implementation Roadmap
 
 **Project:** AI-Powered Pre-Upload Performance Prediction for Sri Lankan YouTube Content Creators  
-**Status:** Data collection in progress; Module C implementation is the next major step  
+**Status:** Local analysis API/UI and initial research pipeline implemented; predictive scoring and human validation remain incomplete
+
 **Scope:** Gaming, Education, and Cooking; Sinhala, Tamil, English, and mixed-language creators  
 **Document purpose:** A practical reference for implementation, experiments, AI coding agents, and panel discussions  
 **Prepared:** 20 October 2026
+
+**Implementation update (21 October):** Use [the current checklist](Module%20C%20next%20steps.md),
+[API/UI contract](MODULE_C_API_AND_UI.md), and [future work](MODULE_C_FUTURE_WORK.md) for the completed
+demo and actual research results. The roadmap below is the original design plan, not a completion log.
 
 > **Core decision:** Build an evidence-informed **Thumbnail Expert** that analyzes a proposed thumbnail and title, retrieves relevant examples, and learns patterns **associated with above- or below-baseline video views**. Do **not** claim that public view counts reveal true click-through rate (CTR), or that the model can establish why people clicked.
 

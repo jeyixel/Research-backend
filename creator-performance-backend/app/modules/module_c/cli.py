@@ -79,7 +79,7 @@ def generate_review(settings):
     frame = read_table(settings)
     folder = settings.artifact_dir / "review"
     folder.mkdir(parents=True, exist_ok=True)
-    items, cards = [], []
+    items, cards, examples = [], [], []
     for category in ("cooking", "education", "gaming"):
         part = frame[(frame.category == category) & (frame.fold == 4)]
         # Prefer script variety, then fill deterministically to six per category.
@@ -93,6 +93,9 @@ def generate_review(settings):
                 thumbnail_path(settings, row.thumb_path).read_bytes(), row.title, category, language
             )
             write_json(folder / f"{row.video_id}.json", report.model_dump())
+            examples.append(
+                {"video_id": row.video_id, "title": row.title, "category": category, "title_language": language}
+            )
             known = {f.id for f in report.findings}
             evidence_valid = all(set(r.evidence_ids) <= known for r in report.recommendations)
             items.append(
@@ -135,14 +138,30 @@ def generate_review(settings):
                 )
                 + "</div></article>"
             )
-    pd.DataFrame(items).to_csv(folder / "human_review.csv", index=False)
+    review = pd.DataFrame(items)
+    sheet = folder / "human_review.csv"
+    if sheet.exists():
+        previous = pd.read_csv(sheet, dtype=str, keep_default_na=False).set_index("video_id")
+        if previous.index.has_duplicates:
+            raise ValueError("Human review sheet has duplicate video IDs; preserve and resolve it first.")
+        for column in [c for c in review if c.startswith("human_") or c == "notes"]:
+            if column in previous:
+                review[column] = review.video_id.map(previous[column]).fillna("")
+        # Preserve judgments for examples no longer in the deterministic selection as well.
+        unselected = previous.loc[~previous.index.isin(review.video_id)].reset_index()
+        review = pd.concat([review, unselected], ignore_index=True)
+    review.to_csv(sheet, index=False)
+    write_json(folder / "examples.json", {"examples": examples})
     page = (
         "<!doctype html><html lang='en'><meta charset='utf-8'><title>Module C human review</title>"
         "<style>body{font:16px system-ui;max-width:1000px;margin:2rem auto}"
         "article{border-bottom:1px solid #aaa;padding:1rem}.neighbors{display:flex;flex-wrap:wrap;gap:1rem}"
         "figure{margin:0;width:320px}figcaption{font-size:14px}li{margin-bottom:.6rem}</style>"
         "<h1>Module C review queue</h1><p>Human review is pending. Record judgments in human_review.csv. "
-        "These are public corpus examples, not unpublished creator uploads.</p>" + "".join(cards) + "</html>"
+        "These are public corpus examples, not unpublished creator uploads.</p>"
+        "<p><a href='/'>Open upload studio</a> · "
+        "<a href='/review/human_review.csv'>Download human review sheet</a></p>"
+        + "".join(cards) + "</html>"
     )
     (folder / "review.html").write_text(page, encoding="utf-8")
     print(f"Generated {len(items)} reports and a human review queue in {folder}")
