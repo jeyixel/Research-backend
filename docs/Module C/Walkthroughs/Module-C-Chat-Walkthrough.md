@@ -112,8 +112,23 @@ Invoke-Item .\artifacts\module_c\review\review.html
 
 Open `http://127.0.0.1:8000/docs` for the upload endpoint. Give `review.html` and `human_review.csv` to the creator or designer who agreed to review. Record whether findings are supported, advice is specific, claims are supported, and retrieved examples are useful; note Sinhala/Tamil detection errors. Review `channel_review.csv` separately. Human judgments remain pending until the reviewer completes those files.
 
-## 6. Current completion boundary
+## 6. Completion boundary at the earlier pause checkpoint
 
 Implemented and verified: Module C code, audited corpus, 24-test suite, lint, installed vision stack, and actual RTX 4050 CUDA availability.
 
 Still to run or complete: 500-image GPU benchmark, full feature extraction, index build, held-out model study, post-install checks, human review page generation, real API smoke test, channel/category/local-relevance judgments, and creator/designer judgments. Until those are done, do not claim the model is expert-validated or that its suggestions improve performance.
+
+## 7. Later local status check — 22 October 2026
+
+The earlier checkpoint above predates the artifacts now present in the working tree. A later read-only
+inspection found completed CUDA extraction metadata for all 30,223 audited images, a 24,163-row
+development reference index, five saved research estimators and held-out results, and the generated
+18-example review queue. Running `python -m app.modules.module_c.cli status` from
+`creator-performance-backend` reports `reference_index: available`, `reference_rows: 24163`, and
+`prediction_mode: research_only`.
+
+The five evaluated experiments are `prior`, `visual`, `title_category`, `clip`, and `combined`; their
+metrics and feature descriptions are recorded in [the implementation summary](../MODULE_C_IMPLEMENTATION.md).
+The upload API still does not use these research estimators, and the human judgments in `channel_review.csv`
+and `review/human_review.csv` remain pending. The status command checked the existing local artifacts; it
+did not rerun training or alter the held-out study.

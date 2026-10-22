@@ -57,13 +57,39 @@ independent outcome labels; image uploads alone cannot measure it.
 
 ## 3. Review queue and remaining human work
 
-Open **http://127.0.0.1:8000/review** and download the human review CSV from its link. The files live in
-`artifacts/module_c/review/`. For each example, a creator/designer must enter `yes`, `partial`, or `no`
-for supported findings, specific advice, absence of unsupported claims, and useful historical matches.
-Record Sinhala/Tamil detection mistakes in `notes`. These judgments are still pending.
+With the server running, open **http://127.0.0.1:8000/review**. This is a read-only gallery of 18 public
+video reports (six per category), not an editable form. Open the corresponding
+`artifacts/module_c/review/human_review.csv` in a UTF-8 capable spreadsheet editor, or download it from
+the gallery. A downloaded copy does not update the server's file automatically: save the completed CSV
+back to that artifact path if the local demo should serve it. Match gallery items to CSV rows by `video_id`.
 
-Also complete `artifacts/module_c/channel_review.csv` for category and Sri Lankan relevance. Material
-dataset corrections require a separately versioned study. Automated checks cannot replace these judgments.
+For each row, enter **`yes`**, **`partial`**, or **`no`** in all four `human_...` columns:
+
+| Column | Mark `yes` when... |
+|---|---|
+| `human_findings_supported` | The observations match what is visible or measured in the thumbnail/title. |
+| `human_advice_specific` | The suggested change is concrete, feasible, and relevant to this thumbnail. |
+| `human_no_unsupported_claims` | The wording avoids unsupported CTR, view-uplift, or causal promises. |
+| `human_neighbors_relevant` | The retrieved examples are useful visual/category comparisons; judge relevance independently of their view outcomes. |
+
+Use `partial` for mixed cases and `no` for clear failures. In `notes`, identify the exact finding,
+suggestion, or historical example and what is wrong; record Sinhala/Tamil text-detection mistakes there.
+`evidence_ids_valid` is an automated check, not a human rating. Reviewers who cannot judge a language
+should ask a reviewer who can before completing that row. All 18 rows currently have blank human ratings.
+
+Separately open `artifacts/module_c/channel_review.csv`. It contains **90 sampled videos from 30
+channels** (three videos from each of ten sampled channels per category), not the whole corpus. For each
+video, judge whether its assigned `category` fits the content in `category_correct`, and whether it is
+relevant to a Sri Lankan audience in `sri_lanka_relevant`. Use `yes`, `no`, or `uncertain` consistently and
+explain borderline or incorrect cases in `review_notes`. These fields have no enforced vocabulary in code;
+all 90 rows currently have blank ratings. Grouping by `channel_id` makes repeated channels easier to
+inspect, but assess each sampled video because a channel can contain off-topic uploads.
+
+When both CSVs are filled, summarize counts and recurring failures by category and title script before
+changing analysis rules or the dataset. This review checks whether the advice and reference data are
+credible for real creators; it does not establish prediction accuracy or edit uplift. Preserve copies of
+completed sheets: generated artifacts are Git-ignored, and rerunning `audit` overwrites
+`channel_review.csv`. Material dataset corrections require a separately versioned study.
 
 To regenerate reports/catalog after a deliberate artifact change, stop the server, then run:
 
@@ -79,6 +105,7 @@ Avoid running artifact-changing jobs concurrently with the demo.
 These checks passed after the UI changes. If source or dependencies change, rerun:
 
 ```powershell
+cd C:\Users\Janith\Desktop\Research-backend\creator-performance-backend
 $testTmp = Join-Path (Get-Location).Path ("artifacts/module_c/pytest_tmp_" + [guid]::NewGuid().ToString("N"))
 .\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp $testTmp
 .\.venv\Scripts\python.exe -m ruff check --no-cache app tests
@@ -88,10 +115,28 @@ The fresh test directory and disabled pytest cache avoid the earlier Windows per
 `%TEMP%/pytest-of-Janith` and `.pytest_cache`. Tests use isolated fixtures rather than depending on the
 real review queue. Report generation order did not cause those failures.
 
-For readiness, use `/health`, `/api/module-c/status`, and one real upload. Status checks the index without
-loading models; the resulting report must show `image_embeddings: available`, `text_detection: available`,
-and historical comparisons. English alignment appears only for `title_language=en`. Predictions remain
-null. The API continues to produce reduced-capability reports when optional models are unavailable.
+For readiness, keep the server from section 2 running and use a **second PowerShell window**:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+Invoke-RestMethod http://127.0.0.1:8000/api/module-c/status
+```
+
+`/health` should return `status: ok`; status should report `reference_index: available`,
+`reference_rows: 24163`, and `prediction_mode: research_only`. Status checks the index without loading
+the image models. Then open **http://127.0.0.1:8000/**, upload a real JPEG/PNG/WebP with a title,
+category, and explicit title language, and download its JSON report. A saved gallery example is
+precomputed, so it does not replace this live upload check. The report should have
+`capabilities.image_embeddings: available`, `capabilities.text_detection: available`, and nonempty
+`historical_comparisons`. English alignment appears only for `title_language=en`. Both prediction fields
+remain `null`. The API can still return a reduced-capability report if an optional model is unavailable.
+
+If `/review` returns 404, stop the server and run the `review` command from section 3, then restart it.
+If status says the reference index is unavailable, inspect `artifacts/module_c/extraction.json` and
+`index.json` before rebuilding anything. If a live upload reports an unavailable image or text model,
+check the environment variables and cached dependencies from the backend README, then restart the server.
+Keep the failed output so the specific cause can be investigated. The custom pytest temp path above is
+the workaround for the earlier Windows permission error.
 
 Verification artifacts from this implementation are in ignored `artifacts/module_c/qa/`: API/browser
 summaries, desktop/mobile screenshots, and synthetic test fixtures. They are functional checks, not

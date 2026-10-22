@@ -19,6 +19,34 @@ The first completed study reports combined held-out AUROC 0.531910 versus title/
 with paired difference interval [-0.009148, 0.017295]. This does not establish useful added visual
 prediction. Combined Brier 0.275438 is worse than the prior 0.250010; API predictions remain null.
 
+## Trained research models
+
+The offline study trained five classifiers to distinguish videos whose `y_rel_neighbors` value is above
+zero (above the channel-relative neighboring-video baseline) from those at or below zero. The split was
+by channel: 24,163 training videos from 242 channels and 5,989 held-out videos from 71 unseen channels.
+Seventy-one development videos were purged because their near-duplicate groups also occurred in the
+held-out fold. Logistic-regression regularization was selected from `C = 0.1, 1, 10` using folds 0–3;
+fold 4 was held out for the reported results.
+
+| Experiment | Inputs | Estimator | Held-out AUROC | Balanced accuracy | Brier score |
+|---|---|---|---:|---:|---:|
+| `prior` | Constant class-prior probability | scikit-learn `DummyClassifier` | 0.500000 | 0.500000 | 0.250010 |
+| `visual` | Brightness, contrast, saturation, CRAFT text coverage/region counts/mobile text heights | Logistic regression | 0.508946 | 0.511161 | 0.250316 |
+| `title_category` | Character n-gram title TF-IDF, category, title length/word/digit/question counts | Logistic regression | 0.527420 | 0.525274 | 0.250458 |
+| `clip` | Frozen 512-dimensional CLIP image embeddings | Logistic regression | 0.523926 | 0.513264 | 0.256356 |
+| `combined` | Visual + title/category + frozen CLIP features | Logistic regression | 0.531910 | 0.522669 | 0.275438 |
+
+The combined model's AUROC was only 0.004490 above the title/category baseline. Its paired channel-bootstrap
+95% interval was [-0.009148, 0.017295], and its Brier score was worse than the constant prior. The study
+therefore does not support showing a performance prediction in the product. This is a retrospective
+relative-public-views experiment, not CTR prediction or evidence that a design change causes more views.
+
+The local `.joblib` files are research artifacts under
+`creator-performance-backend/artifacts/module_c/research/y_rel_neighbors/` and are Git-ignored. The
+trained estimators are not loaded by the upload API. CLIP (`openai/clip-vit-base-patch32`) and CRAFT
+provide frozen/pretrained representations or geometry; neither was fine-tuned as part of this study.
+The versioned metrics above are recorded here because generated artifacts are not committed to Git.
+
 ## Implemented behavior
 
 - Safe JPEG/PNG/WebP uploads, measured luminance/contrast/saturation, optional CRAFT text-region geometry,
